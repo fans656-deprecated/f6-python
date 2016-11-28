@@ -116,5 +116,30 @@ def human_size(b=0, k=0, m=0, g=0, t=0):
     error = abs(value - int_value)
     return '{:.2f}{}'.format(value, name)
 
+class NDArray(list):
+
+    def __init__(self, a, *dimensions, **kwds):
+        super(NDArray, self).__init__(a)
+        self.dimensions = dimensions
+        self.kwds = kwds
+
+def ndarray(val, *dimensions, **kwds):
+
+    def ndarray_(dimensions, pre_dimensions):
+        if len(dimensions) == 1:
+            return [
+                gen(*(pre_dimensions + (i,)))
+                if kwds.get('index', False) else gen()
+                    for i in xrange(dimensions[0])]
+        return [ndarray_(dimensions[1:], pre_dimensions + (i,))
+                for i in xrange(dimensions[0])]
+
+    gen = val if callable(val) else lambda: val
+    if not dimensions:
+        a = []
+    else:
+        a = ndarray_(dimensions, ())
+    return a
+
 if __name__ == '__main__':
-    print human_size(m=200, k=980)
+    a = ndarray(lambda r, c: (r, c), 2, 3, index=True)
