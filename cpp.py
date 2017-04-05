@@ -147,6 +147,8 @@ def normalize_type(type):
 
 cpptype_to_pytype = {
     'int': ctypes.c_int,
+    'int64_t': ctypes.c_longlong,
+    'uint64_t': ctypes.c_ulonglong,
     'unsigned': ctypes.c_uint,
     'float': ctypes.c_float,
     'double': ctypes.c_double,
