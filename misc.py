@@ -38,7 +38,7 @@ def send(data, ip='127.0.0.1', port=6560):
 
 def loc(dir='.',
         includes=None,
-        excludes=lambda path, fname: fname == 't.py', show=False):
+        excludes=lambda path, fname: fname == 't.py', show=True):
     if includes is None:
         def includes(path, fname):
             return any(fname.endswith('.' + ext) for ext in (
@@ -49,6 +49,7 @@ def loc(dir='.',
                 'java',
             ))
     n_lines = 0
+    path2nlines = {}
     for path, dirs, fnames in os.walk(dir):
         if 'ignore' in path:
             continue
@@ -57,8 +58,13 @@ def loc(dir='.',
                 fpath = os.path.join(path, fname)
                 inc = len(open(fpath).readlines())
                 n_lines += inc
-                if show:
-                    print inc, fpath
+                path2nlines[os.path.relpath(fpath)] = inc
+    if show:
+        tot_n_lines = n_lines
+        a = sorted(path2nlines.items(), key=lambda (_, n): n)
+        for fpath, n_lines in a:
+            print '{:>6} {}'.format(n_lines, fpath)
+        print 'Total:', tot_n_lines
     return n_lines
 
 class bunch(dict):
