@@ -7,3 +7,4 @@ def get_hwnd(widget):
     hwnd = ctypes.pythonapi.PyCObject_AsVoidPtr(pycobject_hwnd)
     return hwnd
 widget2hwnd = get_hwnd
+gethwnd = get_hwnd

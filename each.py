@@ -90,6 +90,19 @@ class each(object):
                 setattr(t, k, v)
             return self
 
+    def __getitem__(self, key):
+        return each(t[key] for t in self.__iterable)
+
+    def __setitem__(self, key, val):
+        for t in self.__iterable:
+            t[key] = val
+        return self
+
+    def __delitem__(self, key):
+        for t in self.__iterable:
+            del t[key]
+        return self
+
     # >>> each(a).f(ARGS)
     # >>> each(funcs)(ARGS)
     def __call__(self, *args, **kwargs):
